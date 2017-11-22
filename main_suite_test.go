@@ -7,7 +7,7 @@ import (
 	"testing"
 )
 
-func TestWhatsUp(t *testing.T) {
+func TestMain(t *testing.T) {
 	RegisterFailHandler(Fail)
 	RunSpecs(t, "Main Suite")
 }
