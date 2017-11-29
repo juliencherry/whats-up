@@ -1,13 +1,12 @@
 package main_test
 
 import (
-	"fmt"
-	"os"
-
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	. "github.com/onsi/gomega/gexec"
 
+	"fmt"
+	"os"
 	"os/exec"
 )
 
@@ -26,6 +25,13 @@ var _ = Describe("Main", func() {
 			Expect(err).NotTo(HaveOccurred())
 		})
 
+		AfterEach(func() {
+			err := os.Remove(".set")
+			if !os.IsNotExist(err) {
+				Expect(err).ToNot(HaveOccurred())
+			}
+		})
+
 		JustBeforeEach(func() {
 			cmd := exec.Command(bin, args...)
 			out, err := cmd.Output()
@@ -40,14 +46,6 @@ var _ = Describe("Main", func() {
 			})
 
 			Context("when no reminders have been added", func() {
-
-				BeforeEach(func() {
-					err := os.Remove(".reminders")
-					if !os.IsNotExist(err) {
-						Expect(err).ToNot(HaveOccurred())
-					}
-				})
-
 				It("displays a message indicating that there are no reminders", func() {
 					Expect(output).To(HavePrefix("No reminders!"))
 				})

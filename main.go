@@ -2,22 +2,24 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
-	"log"
 	"os"
+
+	"github.com/juliencherry/whats-up/file"
+	"github.com/juliencherry/whats-up/reminder"
 )
 
-const reminderPath = ".reminders"
+var reminderManager reminder.Manager
 
 func main() {
+	reminderManager = reminder.Manager{
+		Reminders: &file.Set{},
+	}
+
 	args := os.Args[1:]
 
 	if len(args) >= 2 {
 		reminder := args[1]
-		if err := addReminder(reminder); err != nil {
-			log.Fatal(err)
-			return
-		}
+		reminderManager.Add(reminder)
 
 		green := "\033[0;32m"
 		noColor := "\033[0m"
@@ -25,32 +27,13 @@ func main() {
 		return
 	}
 
-	reminder, err := getReminder()
-	if err != nil {
-		log.Fatal(err)
-		return
-	}
+	reminders := reminderManager.GetReminders()
 
-	if reminder == "" {
+	if len(reminders) == 0 {
 		fmt.Println("No reminders!")
 		return
 	}
 
 	fmt.Println("Reminders:")
-	fmt.Println("•", reminder)
-}
-
-func addReminder(reminder string) error {
-	return ioutil.WriteFile(reminderPath, []byte(reminder), 0666)
-}
-
-func getReminder() (string, error) {
-	data, err := ioutil.ReadFile(reminderPath)
-	if os.IsNotExist(err) {
-		return "", nil
-	} else if err != nil {
-		return "", err
-	}
-
-	return fmt.Sprintf("%s", data), nil
+	fmt.Println("•", reminders[0])
 }
