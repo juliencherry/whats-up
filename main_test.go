@@ -51,19 +51,25 @@ var _ = Describe("Main", func() {
 				})
 			})
 
-			Context("when a reminder has been added", func() {
-				var reminder string
+			Context("when some reminders have been added", func() {
+				var reminders []string
 
 				BeforeEach(func() {
-					reminder = "Put on my teeth and brush my pants"
-					cmd := exec.Command(bin, "add", reminder)
-					_, err := cmd.Output()
-					Expect(err).NotTo(HaveOccurred())
+					reminders = []string{"Put on my teeth", "Brush my pants"}
+
+					for _, reminder := range reminders {
+						cmd := exec.Command(bin, "add", reminder)
+						_, err := cmd.Output()
+						Expect(err).NotTo(HaveOccurred())
+					}
 				})
 
-				It("displays that reminder", func() {
-					expectedOutput := fmt.Sprintf("Reminders:\n• %s", reminder)
-					Expect(output).To(HavePrefix(expectedOutput))
+				It("displays those reminders", func() {
+					Expect(output).To(HavePrefix("Reminders:\n"))
+
+					for _, reminder := range reminders {
+						Expect(output).To(ContainSubstring(fmt.Sprintf("• %s\n", reminder)))
+					}
 				})
 			})
 		})

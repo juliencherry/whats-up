@@ -23,16 +23,18 @@ var _ = Describe("Manager", func() {
 		})
 	})
 
-	Context("one reminder has been added", func() {
-		reminder := "Put on my teeth and brush my pants"
+	Context("some reminders have been added", func() {
+		reminders := []string{"Put on my teeth", "Brush my pants"}
 
 		BeforeEach(func() {
-			manager.Add(reminder)
+			for _, reminder := range reminders {
+				manager.Add(reminder)
+			}
 		})
 
-		It("retrieves that reminder", func() {
-			reminders := manager.GetReminders()
-			Expect(reminders).To(ConsistOf(reminder))
+		It("retrieves those reminders", func() {
+			retrievedReminders := manager.GetReminders()
+			Expect(retrievedReminders).To(ConsistOf(reminders))
 		})
 	})
 })

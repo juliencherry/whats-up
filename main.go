@@ -35,5 +35,7 @@ func main() {
 	}
 
 	fmt.Println("Reminders:")
-	fmt.Println("•", reminders[0])
+	for _, reminder := range reminders {
+		fmt.Println("•", reminder)
+	}
 }

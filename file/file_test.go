@@ -30,22 +30,27 @@ var _ = Describe("File", func() {
 		})
 	})
 
-	Context("one element has been added", func() {
-		element := "hydrogen"
+	Context("some elements have been added", func() {
+		elements := []string{"hydrogen", "helium"}
 
 		BeforeEach(func() {
-			set.Add(element)
+			for _, element := range elements {
+				set.Add(element)
+			}
 		})
 
-		It("gets that element", func() {
-			elements := set.GetElements()
-			Expect(elements).To(ConsistOf(element))
+		It("gets those elements", func() {
+			gottenElements := set.GetElements()
+			Expect(gottenElements).To(ConsistOf(elements))
 		})
 
 		It("creates a state file whose contents contain that element", func() {
 			out, err := ioutil.ReadFile(statePath)
 			Expect(err).NotTo(HaveOccurred())
-			Expect(out).To(HavePrefix(element))
+
+			for _, element := range elements {
+				Expect(out).To(ContainSubstring(element))
+			}
 		})
 	})
 })
