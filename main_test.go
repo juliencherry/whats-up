@@ -10,6 +10,11 @@ import (
 	"os/exec"
 )
 
+type Reminder struct {
+	text string
+	date string
+}
+
 var _ = Describe("Main", func() {
 	var args []string
 
@@ -52,40 +57,51 @@ var _ = Describe("Main", func() {
 			})
 
 			Context("when some reminders have been added", func() {
-				var reminders []string
+				var reminders []Reminder
 
 				BeforeEach(func() {
-					reminders = []string{"Put on my teeth", "Brush my pants"}
+					reminders = []Reminder{
+						{
+							text: "Put on my teeth",
+							date: "1988-06-05",
+						},
+						{
+							text: "Brush my pants",
+							date: "2004-12-01",
+						},
+					}
 
 					for _, reminder := range reminders {
-						cmd := exec.Command(bin, "add", reminder)
+						cmd := exec.Command(bin, "add", reminder.text, reminder.date)
 						_, err := cmd.Output()
 						Expect(err).NotTo(HaveOccurred())
 					}
 				})
 
-				It("displays those reminders", func() {
+				It("displays those reminders by date", func() {
 					Expect(output).To(HavePrefix("Reminders:\n"))
 
 					for _, reminder := range reminders {
-						Expect(output).To(ContainSubstring(fmt.Sprintf("• %s\n", reminder)))
+						Expect(output).To(ContainSubstring(fmt.Sprintf("%s\n• %s\n", reminder.date, reminder.text)))
 					}
 				})
 			})
 		})
 
-		Context("with two arguments", func() {
+		Context("with three arguments", func() {
 			var reminder string
+			var date string
 
 			BeforeEach(func() {
 				reminder = "Do something important"
-				args = []string{"add", reminder}
+				date = "2013-02-27"
+				args = []string{"add", reminder, date}
 			})
 
 			It("displays a message confirming that the reminder was added", func() {
 				green := "\033[0;32m"
 				noColor := "\033[0m"
-				message := fmt.Sprintf("%sAdded reminder:%s %s", green, noColor, reminder)
+				message := fmt.Sprintf("%sAdded reminder for %s:%s %s", green, date, noColor, reminder)
 				Expect(output).To(HavePrefix(message))
 			})
 		})
