@@ -1,18 +1,20 @@
 package file_test
 
 import (
+	"encoding/json"
 	"io/ioutil"
 	"os"
 
 	"github.com/juliencherry/whats-up/file"
+	"github.com/juliencherry/whats-up/reminder"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 )
 
-var _ = Describe("File", func() {
+var _ = Describe("Set", func() {
 	set := file.Set{}
-	statePath := ".set"
+	statePath := ".reminders"
 
 	AfterEach(func() {
 		os.Remove(statePath)
@@ -31,7 +33,16 @@ var _ = Describe("File", func() {
 	})
 
 	Context("some elements have been added", func() {
-		elements := []string{"hydrogen", "helium"}
+		var elements = []reminder.Reminder{
+			{
+				Text: "Put on my teeth",
+				Date: "1988-06-05",
+			},
+			{
+				Text: "Brush my pants",
+				Date: "2004-12-01",
+			},
+		}
 
 		BeforeEach(func() {
 			for _, element := range elements {
@@ -49,7 +60,10 @@ var _ = Describe("File", func() {
 			Expect(err).NotTo(HaveOccurred())
 
 			for _, element := range elements {
-				Expect(out).To(ContainSubstring(element))
+				expectedContents, err := json.Marshal(element)
+				Expect(err).NotTo(HaveOccurred())
+
+				Expect(string(out)).To(ContainSubstring(string(expectedContents)))
 			}
 		})
 	})

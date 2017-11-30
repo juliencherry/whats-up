@@ -24,7 +24,16 @@ var _ = Describe("Manager", func() {
 	})
 
 	Context("some reminders have been added", func() {
-		reminders := []string{"Put on my teeth", "Brush my pants"}
+		var reminders = []reminder.Reminder{
+			{
+				Text: "Put on my teeth",
+				Date: "1988-06-05",
+			},
+			{
+				Text: "Brush my pants",
+				Date: "2004-12-01",
+			},
+		}
 
 		BeforeEach(func() {
 			for _, reminder := range reminders {

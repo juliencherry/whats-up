@@ -1,13 +1,13 @@
 package reminder
 
 type FakeSet struct {
-	Set []string
+	Set []Reminder
 }
 
-func (f *FakeSet) Add(element string) {
-	f.Set = append(f.Set, element)
+func (f *FakeSet) Add(reminder Reminder) {
+	f.Set = append(f.Set, reminder)
 }
 
-func (f FakeSet) GetElements() []string {
+func (f FakeSet) GetElements() []Reminder {
 	return f.Set
 }

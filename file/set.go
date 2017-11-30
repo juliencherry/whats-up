@@ -1,37 +1,44 @@
 package file
 
 import (
-	"fmt"
+	"encoding/json"
 	"io/ioutil"
 	"os"
-	"strings"
+
+	"github.com/juliencherry/whats-up/reminder"
 )
 
 type Set struct{}
 
-var statePath = ".set"
+var statePath = ".reminders"
 
-func (s *Set) Add(element string) {
-	f, err := os.OpenFile(statePath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0600)
+func (s Set) Add(element reminder.Reminder) {
+	elements := append(s.GetElements(), element)
+
+	elementsAsJSON, err := json.Marshal(elements)
 	if err != nil {
 		panic(err)
 	}
 
-	defer f.Close()
-
-	if _, err = f.WriteString(fmt.Sprintln(element)); err != nil {
+	err = ioutil.WriteFile(statePath, elementsAsJSON, 0777)
+	if err != nil {
 		panic(err)
 	}
 }
 
-func (s Set) GetElements() []string {
+func (s Set) GetElements() []reminder.Reminder {
 	content, err := ioutil.ReadFile(statePath)
 	if os.IsNotExist(err) {
-		return []string{}
+		return []reminder.Reminder{}
 	} else if err != nil {
 		panic(err)
 	}
 
-	elements := strings.TrimSpace(string(content))
-	return strings.Split(elements, "\n")
+	var elements []reminder.Reminder
+	err = json.Unmarshal(content, &elements)
+	if err != nil {
+		panic(err)
+	}
+
+	return elements
 }
