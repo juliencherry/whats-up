@@ -17,8 +17,12 @@ func main() {
 
 	args := os.Args[1:]
 
-	if len(args) >= 2 {
-		reminder := args[1]
+	if len(args) >= 3 {
+		reminder := &reminder.Reminder{
+			Text: args[1],
+			Date: args[2],
+		}
+
 		reminderManager.Add(reminder)
 
 		green := "\033[0;32m"

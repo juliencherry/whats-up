@@ -11,7 +11,7 @@ type Set struct{}
 
 var statePath = ".set"
 
-func (s *Set) Add(element string) {
+func (s *Set) Add(element interface{}) {
 	f, err := os.OpenFile(statePath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0600)
 	if err != nil {
 		panic(err)
@@ -24,7 +24,7 @@ func (s *Set) Add(element string) {
 	}
 }
 
-func (s Set) GetElements() []string {
+func (s Set) GetElements() interface{} {
 	content, err := ioutil.ReadFile(statePath)
 	if os.IsNotExist(err) {
 		return []string{}
