@@ -1,6 +1,7 @@
 package file_test
 
 import (
+	"encoding/json"
 	"io/ioutil"
 	"os"
 
@@ -9,6 +10,11 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 )
+
+type element struct {
+	Name   string
+	Number int
+}
 
 var _ = Describe("File", func() {
 	set := file.Set{}
@@ -31,7 +37,16 @@ var _ = Describe("File", func() {
 	})
 
 	Context("some elements have been added", func() {
-		elements := []string{"hydrogen", "helium"}
+		elements := []interface{}{
+			element{
+				Name:   "hydrogen",
+				Number: 1,
+			},
+			element{
+				Name:   "helium",
+				Number: 2,
+			},
+		}
 
 		BeforeEach(func() {
 			for _, element := range elements {
@@ -44,12 +59,15 @@ var _ = Describe("File", func() {
 			Expect(gottenElements).To(ConsistOf(elements))
 		})
 
-		It("creates a state file whose contents contain that element", func() {
+		FIt("creates a state file whose contents contain that element", func() {
 			out, err := ioutil.ReadFile(statePath)
 			Expect(err).NotTo(HaveOccurred())
 
 			for _, element := range elements {
-				Expect(out).To(ContainSubstring(element))
+				expectedContents, err := json.Marshal(element)
+				Expect(err).NotTo(HaveOccurred())
+
+				Expect(string(out)).To(ContainSubstring(string(expectedContents)))
 			}
 		})
 	})

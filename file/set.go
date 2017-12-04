@@ -1,7 +1,7 @@
 package file
 
 import (
-	"fmt"
+	"encoding/json"
 	"io/ioutil"
 	"os"
 	"strings"
@@ -19,12 +19,17 @@ func (s *Set) Add(element interface{}) {
 
 	defer f.Close()
 
-	if _, err = f.WriteString(fmt.Sprintln(element)); err != nil {
+	elementAsJSON, err := json.Marshal(element)
+	if err != nil {
+		panic(err)
+	}
+
+	if _, err = f.Write(elementAsJSON); err != nil {
 		panic(err)
 	}
 }
 
-func (s Set) GetElements() interface{} {
+func (s Set) GetElements() []string {
 	content, err := ioutil.ReadFile(statePath)
 	if os.IsNotExist(err) {
 		return []string{}
