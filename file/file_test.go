@@ -59,7 +59,7 @@ var _ = Describe("File", func() {
 			Expect(gottenElements).To(ConsistOf(elements))
 		})
 
-		FIt("creates a state file whose contents contain that element", func() {
+		It("creates a state file whose contents contain that element", func() {
 			out, err := ioutil.ReadFile(statePath)
 			Expect(err).NotTo(HaveOccurred())
 

@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"os"
-	"strings"
 )
 
 type Set struct{}
@@ -12,31 +11,32 @@ type Set struct{}
 var statePath = ".set"
 
 func (s *Set) Add(element interface{}) {
-	f, err := os.OpenFile(statePath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0600)
+	elements := append(s.GetElements(), element)
+
+	elementsAsJSON, err := json.Marshal(elements)
 	if err != nil {
 		panic(err)
 	}
 
-	defer f.Close()
-
-	elementAsJSON, err := json.Marshal(element)
+	err = ioutil.WriteFile(statePath, elementsAsJSON, 0777)
 	if err != nil {
-		panic(err)
-	}
-
-	if _, err = f.Write(elementAsJSON); err != nil {
 		panic(err)
 	}
 }
 
-func (s Set) GetElements() []string {
+func (s Set) GetElements() []interface{} {
 	content, err := ioutil.ReadFile(statePath)
 	if os.IsNotExist(err) {
-		return []string{}
+		return []interface{}{}
 	} else if err != nil {
 		panic(err)
 	}
 
-	elements := strings.TrimSpace(string(content))
-	return strings.Split(elements, "\n")
+	var elements []interface{}
+	err = json.Unmarshal(content, &elements)
+	if err != nil {
+		panic(err)
+	}
+
+	return elements
 }
