@@ -6,19 +6,15 @@ import (
 	"os"
 
 	"github.com/juliencherry/whats-up/file"
+	"github.com/juliencherry/whats-up/reminder"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 )
 
-type element struct {
-	Name   string
-	Number int
-}
-
-var _ = Describe("File", func() {
+var _ = Describe("Set", func() {
 	set := file.Set{}
-	statePath := ".set"
+	statePath := ".reminders"
 
 	AfterEach(func() {
 		os.Remove(statePath)
@@ -37,14 +33,14 @@ var _ = Describe("File", func() {
 	})
 
 	Context("some elements have been added", func() {
-		elements := []interface{}{
-			element{
-				Name:   "hydrogen",
-				Number: 1,
+		var elements = []reminder.Reminder{
+			{
+				Text: "Put on my teeth",
+				Date: "1988-06-05",
 			},
-			element{
-				Name:   "helium",
-				Number: 2,
+			{
+				Text: "Brush my pants",
+				Date: "2004-12-01",
 			},
 		}
 

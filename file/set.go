@@ -4,13 +4,15 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"os"
+
+	"github.com/juliencherry/whats-up/reminder"
 )
 
 type Set struct{}
 
 var statePath = ".set"
 
-func (s *Set) Add(element interface{}) {
+func (s *Set) Add(element reminder.Reminder) {
 	elements := append(s.GetElements(), element)
 
 	elementsAsJSON, err := json.Marshal(elements)
@@ -24,15 +26,15 @@ func (s *Set) Add(element interface{}) {
 	}
 }
 
-func (s Set) GetElements() []interface{} {
+func (s Set) GetElements() []reminder.Reminder {
 	content, err := ioutil.ReadFile(statePath)
 	if os.IsNotExist(err) {
-		return []interface{}{}
+		return []Reminder{}
 	} else if err != nil {
 		panic(err)
 	}
 
-	var elements []interface{}
+	var elements []Reminder{}
 	err = json.Unmarshal(content, &elements)
 	if err != nil {
 		panic(err)

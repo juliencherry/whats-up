@@ -6,8 +6,8 @@ type Reminder struct {
 }
 
 type Set interface {
-	Add(element interface{})
-	GetElements() []interface{}
+	Add(reminder Reminder)
+	GetElements() []Reminder
 }
 
 type Manager struct {
@@ -20,16 +20,5 @@ func (m *Manager) Add(reminder Reminder) {
 }
 
 func (m Manager) GetReminders() []Reminder {
-	var reminders []Reminder
-
-	for _, element := range m.Reminders.GetElements() {
-		reminder, ok := element.(Reminder)
-		if !ok {
-			panic("could not get reminder")
-		}
-
-		reminders = append(reminders, reminder)
-	}
-
-	return reminders
+	return m.Reminders.GetElements()
 }

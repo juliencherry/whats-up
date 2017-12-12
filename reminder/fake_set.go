@@ -1,13 +1,13 @@
 package reminder
 
 type FakeSet struct {
-	Set []interface{}
+	Set []Reminder
 }
 
-func (f *FakeSet) Add(element interface{}) {
-	f.Set = append(f.Set, element)
+func (f *FakeSet) Add(reminder Reminder) {
+	f.Set = append(f.Set, reminder)
 }
 
-func (f FakeSet) GetElements() []interface{} {
+func (f FakeSet) GetElements() []Reminder {
 	return f.Set
 }
