@@ -31,7 +31,7 @@ var _ = Describe("Main", func() {
 		})
 
 		AfterEach(func() {
-			err := os.Remove(".set")
+			err := os.Remove(".reminders")
 			if !os.IsNotExist(err) {
 				Expect(err).ToNot(HaveOccurred())
 			}

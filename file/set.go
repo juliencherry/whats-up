@@ -10,9 +10,9 @@ import (
 
 type Set struct{}
 
-var statePath = ".set"
+var statePath = ".reminders"
 
-func (s *Set) Add(element reminder.Reminder) {
+func (s Set) Add(element reminder.Reminder) {
 	elements := append(s.GetElements(), element)
 
 	elementsAsJSON, err := json.Marshal(elements)
@@ -29,12 +29,12 @@ func (s *Set) Add(element reminder.Reminder) {
 func (s Set) GetElements() []reminder.Reminder {
 	content, err := ioutil.ReadFile(statePath)
 	if os.IsNotExist(err) {
-		return []Reminder{}
+		return []reminder.Reminder{}
 	} else if err != nil {
 		panic(err)
 	}
 
-	var elements []Reminder{}
+	var elements []reminder.Reminder
 	err = json.Unmarshal(content, &elements)
 	if err != nil {
 		panic(err)
