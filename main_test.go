@@ -79,10 +79,10 @@ var _ = Describe("Main", func() {
 				})
 
 				It("displays those reminders by date", func() {
-					Expect(output).To(HavePrefix("Reminders:\n"))
+					Expect(output).To(HavePrefix("Reminders:\n\n"))
 
 					for _, reminder := range reminders {
-						Expect(output).To(ContainSubstring(fmt.Sprintf("%s\n• %s\n", reminder.date, reminder.text)))
+						Expect(output).To(ContainSubstring(fmt.Sprintf("%s\n• %s\n\n", reminder.date, reminder.text)))
 					}
 				})
 			})
