@@ -37,7 +37,7 @@ func main() {
 		return
 	}
 
-	fmt.Println("Reminders:\n")
+	fmt.Print("Reminders:\n\n")
 	for _, reminder := range reminders {
 		fmt.Println(reminder.Date)
 		fmt.Printf("• %s\n\n", reminder.Text)
