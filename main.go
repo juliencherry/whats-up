@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/juliencherry/whats-up/file"
 	"github.com/juliencherry/whats-up/reminder"
 )
 
@@ -12,7 +11,7 @@ var reminderManager *reminder.Manager
 
 func main() {
 	reminderManager = &reminder.Manager{
-		Reminders: file.Set{},
+		Reminders: reminder.FileSet{},
 	}
 
 	args := os.Args[1:]

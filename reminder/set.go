@@ -1,19 +1,17 @@
-package file
+package reminder
 
 import (
 	"encoding/json"
 	"io/ioutil"
 	"os"
-
-	"github.com/juliencherry/whats-up/reminder"
 )
 
-type Set struct{}
+type FileSet struct{}
 
 var statePath = ".reminders"
 
-func (s Set) Add(element reminder.Reminder) {
-	elements := append(s.GetElements(), element)
+func (f FileSet) Add(element Reminder) {
+	elements := append(f.GetElements(), element)
 
 	elementsAsJSON, err := json.Marshal(elements)
 	if err != nil {
@@ -26,15 +24,15 @@ func (s Set) Add(element reminder.Reminder) {
 	}
 }
 
-func (s Set) GetElements() []reminder.Reminder {
+func (f FileSet) GetElements() []Reminder {
 	content, err := ioutil.ReadFile(statePath)
 	if os.IsNotExist(err) {
-		return []reminder.Reminder{}
+		return []Reminder{}
 	} else if err != nil {
 		panic(err)
 	}
 
-	var elements []reminder.Reminder
+	var elements []Reminder
 	err = json.Unmarshal(content, &elements)
 	if err != nil {
 		panic(err)

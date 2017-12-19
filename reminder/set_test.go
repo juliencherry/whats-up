@@ -1,19 +1,18 @@
-package file_test
+package reminder_test
 
 import (
 	"encoding/json"
 	"io/ioutil"
 	"os"
 
-	"github.com/juliencherry/whats-up/file"
-	"github.com/juliencherry/whats-up/reminder"
-
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+
+	"github.com/juliencherry/whats-up/reminder"
 )
 
 var _ = Describe("Set", func() {
-	set := file.Set{}
+	set := reminder.FileSet{}
 	statePath := ".reminders"
 
 	AfterEach(func() {
