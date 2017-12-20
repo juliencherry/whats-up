@@ -61,14 +61,14 @@ var _ = Describe("Main", func() {
 
 				BeforeEach(func() {
 					reminderMap = map[string][]Reminder{
-						"1988-06-05": []Reminder{
+						"2007-02-19": []Reminder{
 							{
 								text: "Put on my teeth",
-								date: "1988-06-05",
+								date: "2007-02-19",
 							},
 							{
 								text: "Brush my pants",
-								date: "1988-06-05",
+								date: "2007-02-19",
 							},
 						},
 						"2004-12-01": []Reminder{{
