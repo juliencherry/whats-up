@@ -57,33 +57,46 @@ var _ = Describe("Main", func() {
 			})
 
 			Context("when some reminders have been added", func() {
-				var reminders []Reminder
+				var datesWithReminders map[string][]Reminder
 
 				BeforeEach(func() {
-					reminders = []Reminder{
+					datesWithReminders = make(map[string][]Reminder)
+					datesWithReminders["1988-06-05"] = []Reminder{
 						{
-							text: "Put on my teeth",
-							date: "1988-06-05",
+						text: "Do something important",
+						},
+					}
+					datesWithReminders["2004-12-01"] = []Reminder{
+						{
+							text:"Put on my teeth",
 						},
 						{
-							text: "Brush my pants",
-							date: "2004-12-01",
+							text:"Brush my pants",
 						},
 					}
 
-					for _, reminder := range reminders {
-						cmd := exec.Command(bin, "add", reminder.text, reminder.date)
-						_, err := cmd.Output()
-						Expect(err).NotTo(HaveOccurred())
+					for date, reminders := range datesWithReminders {
+						for _, reminder := range reminders {
+							cmd := exec.Command(bin, "add", reminder.text, date)
+							_, err := cmd.Output()
+							Expect(err).NotTo(HaveOccurred())
+
+						}
 					}
 				})
 
 				It("displays those reminders by date", func() {
 					Expect(output).To(HavePrefix("Reminders:\n\n"))
 
-					for _, reminder := range reminders {
-						Expect(output).To(ContainSubstring(fmt.Sprintf("%s\n• %s\n\n", reminder.date, reminder.text)))
+					for date, reminders := range datesWithReminders {
+						var expectedSubstring = fmt.Sprintln(date)
+						for _, reminder := range reminders {
+							expectedSubstring += fmt.Sprintf("• %s\n", reminder.text)
+						}
+						expectedSubstring += "\n"
+						Expect(output).To(ContainSubstring(expectedSubstring))
 					}
+
 				})
 			})
 		})
@@ -93,7 +106,7 @@ var _ = Describe("Main", func() {
 			var date string
 
 			BeforeEach(func() {
-				reminder = "Do something important"
+				reminder = "Do something else important"
 				date = "2013-02-27"
 				args = []string{"add", reminder, date}
 			})

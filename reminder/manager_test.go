@@ -12,7 +12,7 @@ var _ = Describe("Manager", func() {
 
 	BeforeEach(func() {
 		manager = reminder.Manager{
-			Reminders: &reminder.FakeSet{},
+			Reminders: &reminder.FakeMap{Map: make(map[string][]reminder.Reminder)},
 		}
 	})
 
@@ -24,26 +24,22 @@ var _ = Describe("Manager", func() {
 	})
 
 	Context("some reminders have been added", func() {
-		var reminders = []reminder.Reminder{
-			{
-				Text: "Put on my teeth",
-				Date: "1988-06-05",
-			},
-			{
-				Text: "Brush my pants",
-				Date: "2004-12-01",
-			},
+		var datesWithReminders = map[string][]reminder.Reminder{
+			"1988-06-05": []reminder.Reminder{{Text: "Put on my teeth"}},
+			"2004-12-01": []reminder.Reminder{{Text: "Brush my pants"}},
 		}
 
 		BeforeEach(func() {
-			for _, reminder := range reminders {
-				manager.Add(reminder)
+			for date, reminders := range datesWithReminders {
+				for _, reminder := range reminders {
+					manager.Add(date, reminder)
+				}
 			}
 		})
 
 		It("retrieves those reminders", func() {
 			retrievedReminders := manager.GetReminders()
-			Expect(retrievedReminders).To(ConsistOf(reminders))
+			Expect(retrievedReminders).To(Equal(datesWithReminders))
 		})
 	})
 })

@@ -2,23 +2,22 @@ package reminder
 
 type Reminder struct {
 	Text string
-	Date string
 }
 
-type Set interface {
-	Add(reminder Reminder)
-	GetElements() []Reminder
+type Map interface {
+	Add(date string, reminder Reminder)
+	GetElements() map[string][]Reminder
 }
 
 type Manager struct {
-	Reminders Set
+	Reminders Map
 }
 
-func (m *Manager) Add(reminder Reminder) {
-	m.Reminders.Add(reminder)
+func (m *Manager) Add(date string, reminder Reminder) {
+	m.Reminders.Add(date, reminder)
 	return
 }
 
-func (m Manager) GetReminders() []Reminder {
+func (m Manager) GetReminders() map[string][]Reminder {
 	return m.Reminders.GetElements()
 }

@@ -11,8 +11,8 @@ import (
 	"github.com/juliencherry/whats-up/reminder"
 )
 
-var _ = Describe("Set", func() {
-	set := reminder.FileSet{}
+var _ = Describe("Map", func() {
+	fileMap := &reminder.FileMap{}
 	statePath := ".reminders"
 
 	AfterEach(func() {
@@ -21,7 +21,7 @@ var _ = Describe("Set", func() {
 
 	Context("no elements have been added", func() {
 		It("gets no elements", func() {
-			elements := set.GetElements()
+			elements := fileMap.GetElements()
 			Expect(elements).To(BeEmpty())
 		})
 
@@ -32,34 +32,36 @@ var _ = Describe("Set", func() {
 	})
 
 	Context("some elements have been added", func() {
-		var elements = []reminder.Reminder{
-			{
-				Text: "Put on my teeth",
-				Date: "1988-06-05",
+		var elements = map[string][]reminder.Reminder{
+			"1988-06-05": []reminder.Reminder{
+				{Text: "Do something important"},
 			},
-			{
-				Text: "Brush my pants",
-				Date: "2004-12-01",
+
+			"2004-12-01": []reminder.Reminder{
+				{Text: "Put on my teeth"},
+				{Text: "Brush my pants"},
 			},
 		}
 
 		BeforeEach(func() {
-			for _, element := range elements {
-				set.Add(element)
+			for date, reminders := range elements {
+				for _, reminder := range reminders {
+					fileMap.Add(date, reminder)
+				}
 			}
 		})
 
 		It("gets those elements", func() {
-			gottenElements := set.GetElements()
-			Expect(gottenElements).To(ConsistOf(elements))
+			gottenElements := fileMap.GetElements()
+			Expect(gottenElements).To(Equal(elements))
 		})
 
 		It("creates a state file whose contents contain that element", func() {
 			out, err := ioutil.ReadFile(statePath)
 			Expect(err).NotTo(HaveOccurred())
 
-			for _, element := range elements {
-				expectedContents, err := json.Marshal(element)
+			for _, reminders := range elements {
+				expectedContents, err := json.Marshal(reminders)
 				Expect(err).NotTo(HaveOccurred())
 
 				Expect(string(out)).To(ContainSubstring(string(expectedContents)))
