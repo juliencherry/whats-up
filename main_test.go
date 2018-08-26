@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"time"
 )
 
 type Reminder struct {
@@ -98,6 +99,26 @@ var _ = Describe("Main", func() {
 					}
 
 				})
+			})
+		})
+
+		Context("with one argument", func() {
+			var reminder string
+
+			BeforeEach(func() {
+				reminder = "Happy birthday!"
+				date := time.Now().Format("2006-01-02")
+				cmd := exec.Command(bin, "add", reminder, date)
+				_, err := cmd.Output()
+				Expect(err).NotTo(HaveOccurred())
+
+				args = []string{"today"}
+
+			})
+
+			It("displays today’s reminders", func() {
+				Expect(output).To(HavePrefix("Here’s what’s on your plate for today:\n"))
+				Expect(output).To(ContainSubstring("• %s\n", reminder))
 			})
 		})
 
